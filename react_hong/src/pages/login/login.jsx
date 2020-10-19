@@ -30,7 +30,13 @@ export default class Login extends Component {
      return Promise.resolve();
    }
   }
-
+  /*
+ 用户名/密码的的合法性要求
+  1). 必须输入
+  2). 必须大于等于4位
+  3). 必须小于等于12位
+  4). 必须是英文、数字或下划线组成
+ */
 
   render() {
     return (
