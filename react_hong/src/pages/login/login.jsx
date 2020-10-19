@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import "./css/login.less"
-import logo from "./imgs/uugai.com-1603100862525.png"
+import logo from "./img/uugai.com-1603100862525.png"
 import { Form, Input, Button, Icon} from 'antd';
 const {Item} = Form;
 
@@ -84,3 +84,4 @@ export default class Login extends Component {
     )
   }
 }
+
