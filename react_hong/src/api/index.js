@@ -25,3 +25,12 @@ export const reqWeather = ()=> {
     }
   })
 }
+
+//添加商品列表
+export const reqAddCategory = ({categoryName})=> myAxios.post(`${BASE_URL}/manage/category/add`,{categoryName})
+
+//更新商品列表
+export const reqUpdateCategory = ({categoryId,categoryName})=> myAxios.post(`${BASE_URL}/manage/category/update`,{categoryName,categoryId})
+
+//更新商品列表
+export const reqProductList = (pageNum,pageSize)=> myAxios.get(`${BASE_URL}/manage/product/list`,{params:{pageNum,pageSize}})

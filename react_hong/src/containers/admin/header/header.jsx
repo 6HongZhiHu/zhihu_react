@@ -22,7 +22,7 @@ class header extends Component {
     screenfull.toggle();
   }
   logOut = ()=>{
-    console.log(this.props);
+    //console.log(this.props);
     //console.log(e);
     message.info("已退出登录")
     this.props.deleteUser()
@@ -42,18 +42,26 @@ class header extends Component {
   
   //生命周期组件挂载之后或者状态第二次更新
   componentDidMount(){
-    console.log(this.props)
+    //console.log(this.props)
     //监听屏幕是否全屏切换图标
     screenfull.on("change",()=>{
       let isFull = !this.state.isFull;
       this.setState({ isFull })
     });
-    setInterval(()=>{
+    this.timeId = setInterval(()=>{
       this.setState({ date: dayjs().format("YYYY年 MM月DD日 HH:mm:ss")})
     });
     this.getWheather();
     //console.log(this.props)
     this.getTitle()
+  }
+
+  //生命周期函数在即将销毁的组件前调用
+  componentWillUnmount(){
+    //清除setInterval
+    //我们不能在组件销毁后设置state，防止出现内存泄漏的情况
+    //清除定时器
+    clearInterval(this.timeId)
   }
   
   handleCancel = e => {

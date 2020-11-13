@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {connect} from "react-redux"
-import {Button, Layout } from "antd"
+import { Layout } from "antd"
 import {createDeleteUserAction} from "../../redux/action_creators/login_action"
 import {reqCategory} from "../../api/index"
 import {Route,Switch,Redirect} from "react-router-dom"
@@ -56,7 +56,7 @@ class Admin extends Component {
                 <Redirect to="admin/home"/>
               </Switch>
             </Content>
-            <Footer className="footer"><Button onClick={this.demo} type="primary">获取</Button> 推荐使用谷歌浏览器，可以获得最佳体验</Footer>
+            <Footer className="footer"> 推荐使用谷歌浏览器，可以获得最佳体验</Footer>
           </Layout>
         </Layout>
       )

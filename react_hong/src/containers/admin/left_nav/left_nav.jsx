@@ -44,7 +44,7 @@ class LeftNav extends Component {
   }
   componentDidMount(){
    //获取路由地址
-    console.log([this.props.location.pathname])
+    //console.log([this.props.location.pathname])
   }
   render() {
     return (

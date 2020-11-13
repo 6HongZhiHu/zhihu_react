@@ -1,46 +1,44 @@
 import React, { Component } from 'react'
 import {Card,Button,Table,message,Modal,Input,Form} from "antd"
 import { LayoutOutlined } from '@ant-design/icons';
-import {reqCategory} from "../../api/index"
+import {reqCategory,reqAddCategory,reqUpdateCategory} from "../../api/index"
 import {PAGESIZE} from "../../config/index"
 const {Item} = Form;
-//const [form] = Form.useForm();
-
 
 export default class Category extends Component {
-  
   formRef = React.createRef();
-  
+
+
   state = {
     list:[],   //商品分类列表
     visible: false,
-    operType:""
+    operType:"",
+    isLoading:true,
+    modVal:"",
+    modId:""
   }
 
   demo = (a) => {
     // console.log("定位")
     // console.log(a.name,a);
     //console.log(a.name,this.input)
-    this.showUpdate();
+    this.showUpdate(a);
   }
 
   getList = async ()=>{
     //let res = await reqCategory()
-  }
-
-  async componentDidMount(){
-    //this.getList()
     let res = await reqCategory();
-    console.log(res)
-    let {status,data,msg} = res;
+    let { status, data, msg } = res;
 
-    // data.map((i)=>{
-    //   return i.key = i._id;
-    // })
-  
-    if(status === 0 ) this.setState({list:data})
-    else message.error(msg,1);
+    if (status === 0) this.setState({ list: data, isLoading: false })
+    else message.error(msg, 1);
   }
+
+  componentDidMount(){
+    this.getList();  
+  }
+
+  
 
   showAdd = () => {
     //console.log("???")
@@ -48,30 +46,81 @@ export default class Category extends Component {
       operType:"新增",
       visible: true,
     });
+    if (this.formRef.current) {
+      //console.log(this.formRef)
+      this.formRef.current.resetFields()
+    }
   }
 
-  showUpdate = () => {
-    //console.log("???")
+  showUpdate = (a) => {
+    //console.log(a)
     this.setState({
       operType: "修改",
       visible: true,
+      modVal:a.name,
+      modId:a._id
+    });
+    if (this.formRef.current){
+      //console.log(this.formRef)
+      this.formRef.current.setFieldsValue({categoryName:a.name})
+    }
+    
+  }
+
+  handleOk = async () => {
+    //const [form] = Form.useForm();
+    const {operType} = this.state
+    
+    // if(operType === "新增")  
+    // if(operType === "修改")
+    this.formRef.current.validateFields().then((value) => {
+      // 验证通过后进入
+      if (operType === "新增")  this.todoAdd(value)
+      if (operType === "修改"){
+        const categoryId = this.state.modId;
+        const {categoryName} = value;
+        let obj = { categoryId, categoryName }
+        this.todoUpdate(obj)
+      }
+    }).catch(err => {
+      // 验证不通过时进入
+      message.warning("输入有误",1)
+     
     });
   }
 
-  handleOk = async e => {
-    //const {operType} = this.state
-    // if(operType === "新增")  
-    // if(operType === "修改")
-    try {
-      //const values = await form.validateFields();
+  //调用add API的
+  todoAdd = async (value)=>{
+    let reslut = await reqAddCategory(value);
+    this.formRef.current.resetFields();
+    this.setState({isLoading:false})
+    //console.log(reslut)
+    const {status,data,msg} = reslut;
+    
+    if(status === 0){
+      message.success("新增成功");
       this.formRef.current.resetFields();
+      let list = [...this.state.list];
+      list.unshift(data);
+      this.setState({list})
       this.setState({
         visible: false,
       });
-    }catch(err){
-      message.warning("表单输入有误",1)
+    } 
+    if(status === 1) message.error(msg,1);
+  }
+
+  //调用Update API的
+  todoUpdate = async (obj) => {
+    //console.log(obj)
+    let result = await reqUpdateCategory(obj);
+    //console.log(result)
+    this.getList();
+    const {status} = result;
+    if(status === 0){
+      message.success("修改成功",1)
+      this.setState({visible:false,modId:"",modVal:""})
     }
-   
   }
 
   handleCancel = e => {
@@ -79,6 +128,8 @@ export default class Category extends Component {
     this.formRef.current.resetFields();
     this.setState({
       visible: false,
+      modVal:"",
+      modId:""
     });
   }
 
@@ -91,7 +142,7 @@ export default class Category extends Component {
     }
   }
   render() {
-    
+    //const [form] = Form.useForm();
     const columns = [
       {
         title: '分类名',
@@ -110,7 +161,7 @@ export default class Category extends Component {
       },
 
     ];
-    
+    const {operType} = this.state
     return (
       <div>
         <Card 
@@ -128,7 +179,9 @@ export default class Category extends Component {
             bordered 
             dataSource={this.state.list} 
             columns={columns} rowKey="_id" 
-            pagination={{ pageSize: PAGESIZE}}/>
+            pagination={{ pageSize: PAGESIZE,showQuickJumper:true}}
+            loading={this.state.isLoading}
+          />
         </Card>
         <Modal
           title={`${this.state.operType}分类`}
@@ -140,11 +193,14 @@ export default class Category extends Component {
         >
           <Form ref={this.formRef}>
             <Item 
-              name="listName"
+              name="categoryName"
               rules={[{ validator: this.pwdValidator }]}
-              
+              initialValue={operType==="修改"?this.state.modVal:""}
             >
-              <Input placeholder="请输入分类名" />
+              <Input 
+                placeholder="请输入分类名" 
+                
+              />
             </Item>
           </Form>
         </Modal>

@@ -16,7 +16,7 @@ class Login extends Component {
   //formRef = React.createRef();
   //提交表单且数据验证成功后回调事件	
   handleSubmit = async (value)=>{
-    console.log("提交====>",value);
+    //console.log("提交====>",value);
     const {username,password} = value;
     let result = await reqLogin(username,password)
     const {status,msg} = result;
@@ -38,7 +38,7 @@ class Login extends Component {
   }
   //提交表单验证失败后的回调事件
   errInfo = (err)=>{
-    console.log(err);
+    //console.log(err);
     message.error("表单输入错误，请重新输入")
     return;
   }
