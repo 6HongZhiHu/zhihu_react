@@ -44,9 +44,10 @@ class LeftNav extends Component {
   }
   componentDidMount(){
    //获取路由地址
-    //console.log([this.props.location.pathname])
+   // console.log([this.props.location.pathname])
   }
   render() {
+    let { pathname } = this.props.location
     return (
       <div >
         <header className="nav-header">
@@ -54,8 +55,8 @@ class LeftNav extends Component {
           <h1>HZH后台管理</h1>
         </header>
         <Menu
-          defaultSelectedKeys={[this.props.location.pathname]}
-          defaultOpenKeys={this.props.location.pathname.split("/").splice(2)}
+          defaultSelectedKeys={pathname.indexOf("product") !== -1 ? "/admin/prod_about/product" : pathname}
+          defaultOpenKeys={[pathname]}
           mode="inline"
           theme="dark"
         >

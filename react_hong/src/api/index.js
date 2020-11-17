@@ -29,8 +29,19 @@ export const reqWeather = ()=> {
 //添加商品列表
 export const reqAddCategory = ({categoryName})=> myAxios.post(`${BASE_URL}/manage/category/add`,{categoryName})
 
-//更新商品列表
+//更新商品分类列表
 export const reqUpdateCategory = ({categoryId,categoryName})=> myAxios.post(`${BASE_URL}/manage/category/update`,{categoryName,categoryId})
 
 //更新商品列表
 export const reqProductList = (pageNum,pageSize)=> myAxios.get(`${BASE_URL}/manage/product/list`,{params:{pageNum,pageSize}})
+
+//更新商品状态
+export const reqUpdateProducStatus = ({categoryId,status})=> myAxios.post(`${BASE_URL}/manage/product/updateStatus`,{categoryId,status})
+
+//搜索商品
+export const reqSearchProduct = (pageNum,pageSize,searchType,keyWord)=> myAxios.get(`${BASE_URL}/manage/product/search`,
+{params:{pageNum,pageSize,[searchType]:keyWord}})
+
+//根据商品ID获取商品信息
+//接口作废没有这个接口 绝望！！！
+export const reqProductId = (productId)=> myAxios.get(`${BASE_URL}/manage/category/info`,{params:{categoryId:productId}})

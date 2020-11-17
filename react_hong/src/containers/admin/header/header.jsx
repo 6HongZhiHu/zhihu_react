@@ -72,6 +72,7 @@ class header extends Component {
   };
   getTitle = ()=>{
     let key = this.props.location.pathname
+    if (key.indexOf("product") !== -1) key = "/admin/prod_about/product"
     let title = "";
     menuConfig.forEach((item)=>{
       if(item.children instanceof Array){

@@ -1,22 +1,36 @@
 import React, { Component } from 'react'
-import { Card, Button, Select,Input ,Table} from "antd"
+import { Card, Button, Select,Input ,Table, message} from "antd"
 import { PlusCircleOutlined, SearchOutlined} from '@ant-design/icons';
-import {reqProductList} from "../../api/index"
+import {connect} from "react-redux"
+import {createSaveProductAction} from "../../redux/action_creators/product_action"
+import {reqProductList,reqUpdateProducStatus,reqSearchProduct} from "../../api/index"
 import {PAGESIZE} from "../../config/index"
 const { Option } = Select;
 
-export default class Product extends Component {
+class Product extends Component {
   state = {
     prouctList:[],
-    total:0,
-    pageNum:0,
+    total:0,//一共有几页
+    pageNum:0,//当前页
     pages:0,
+    keyWord:"",
+    searchType:"productName"
   }
 
-  getProductList = async (number)=>{
-    let result = await reqProductList(number,PAGESIZE);
-    const {status,data} = result;
-    console.log(result)
+  getProductList = async (number=1)=>{
+    let result
+    //console.log(searchType,keyWord);
+    if (this.isSearch) { 
+      const { searchType, keyWord } = this.state; 
+      result = await reqSearchProduct(number, PAGESIZE, searchType, keyWord);
+    }else{
+      result = await reqProductList(number,PAGESIZE);
+    }
+   
+    const {status,data,msg} = result;
+    if(data.list) this.props.SaveProduct(data.list);
+    
+    //console.log(number)
     if(status===0){
       this.setState({
         prouctList:data.list,
@@ -24,6 +38,45 @@ export default class Product extends Component {
         pageNum:data.pageNum
       })
     }
+    else message.error(msg)
+  }
+  
+  undateProdstatus = async ({_id,status})=>{
+    let prouctList = [...this.state.prouctList]//浅克隆一个数组
+    //console.log(id)
+    if(status === 1) status = 2
+    else status = 1
+    let reslut = await reqUpdateProducStatus({categoryId:_id,status});
+    console.log(reslut)
+    if(reslut.status === 0){
+      message.success("商品更新成功");
+      prouctList.map((item)=>{
+        if(item._id === _id){
+          item.status = status
+        }
+        return item
+      })
+      this.setState({prouctList})
+    }
+    else message.error(reslut.msg)
+  }
+
+  search = async ()=>{
+    // const {searchType,keyWord} = this.state;
+    // //console.log(searchType,keyWord);
+    // let result = await reqSearchProduct(1,PAGESIZE,searchType,keyWord);
+    // //console.log(result)
+    // const {data,status,msg} = result;
+    // if(status === 0){
+    //   this.setState({
+    //     prouctList: data.list,
+    //     total: data.total,
+    //     pageNum: data.pageNum
+    //   })
+    // }
+    // else message.error(msg)
+    this.isSearch = true;
+    this.getProductList()
   }
 
   componentDidMount(){
@@ -36,22 +89,6 @@ export default class Product extends Component {
   //   this.getProductList()
   // }
   render() {
-    // const dataSource = [
-    //   {
-    //     key: '1',
-    //     name: '华为meta20手机',
-    //     desc: "华为手机",
-    //     price: '4299',
-    //     status:"在售"
-    //   },
-    //   {
-    //     key: '2',
-    //     name: '苹果12',
-    //     desc: "苹果手机",
-    //     price: '8299',
-    //     status: "下架"
-    //   },
-    // ];
 
     const columns = [
       {
@@ -76,26 +113,32 @@ export default class Product extends Component {
       },
       {
         title: '状态',
-        dataIndex: 'status',
+        //dataIndex: 'status',
         align: "center",
         width: "12%",
         key: 'status',
-        render : (status)=>{
+        render : (item)=>{
+          const {status} = item;
           return <div>
-            <Button type="primary">下架</Button ><br/>
-            <span>{status}</span>
+            <Button 
+              type={status === 1 ? "danger" : "primary"}
+              onClick={ ()=>{this.undateProdstatus(item)} }
+            >
+              {status === 1 ? "下架" : "上架"}
+            </Button ><br/>
+            <span>{status === 1 ? "在售" : "停售"}</span>
             </div>}
       },
       {
         title: '操作',
-        dataIndex: 'cz',
+        //dataIndex: 'cz',
         align: "center",
         width: "9%",
         key: 'cz',
-        render:()=>{
+        render:(e)=>{
           return <div>
-            <Button type="link">详情</Button><br/>
-            <Button type="link">修改</Button>
+            <Button type="link" onClick={() => { this.props.history.push(`/admin/prod_about/product/detail/${e._id}`) }}>详情</Button><br/>
+            <Button type="link" onClick={() => { this.props.history.push(`/admin/prod_about/product/add_update/${e._id}`) }}>修改</Button>
           </div>
         }
       },
@@ -105,19 +148,29 @@ export default class Product extends Component {
         <Card 
           title={
             <div>
-              <Select defaultValue="name">
-                <Option value="name">按名称搜索</Option>
-                <Option value="desc">按描述搜索</Option>
+              <Select defaultValue="productName" onChange={(v) => { this.setState({ searchType: v }) }}>
+                <Option value="productName">按名称搜索</Option>
+                <Option value="productDesc">按描述搜索</Option>
               </Select>
               <Input 
                 style={{margin:"0 10px",width:"20%"}}
                 placeholder="请输入搜索关键字"
                 allowClear
+                onChange={(e)=>{this.setState({keyWord:e.target.value})}}
               ></Input>
-              <Button type="primary" icon={<SearchOutlined />}></Button>
+              <Button 
+                type="primary" 
+                onClick={this.search} 
+                icon={<SearchOutlined />}
+              >搜索</Button>
             </div>
           } 
-          extra={<Button type="primary" icon={<PlusCircleOutlined />}>添加商品</Button>} 
+          extra={<Button 
+            type="primary"
+            onClick={()=>{ this.props.history.push("/admin/prod_about/product/add_update")}} 
+            icon={<PlusCircleOutlined 
+            />
+          }>添加商品</Button>} 
           
         >
           <Table 
@@ -137,3 +190,6 @@ export default class Product extends Component {
     )
   }
 }
+export default connect(state =>({}),
+{ SaveProduct: createSaveProductAction})(Product)
+
