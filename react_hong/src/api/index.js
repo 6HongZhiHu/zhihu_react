@@ -45,3 +45,6 @@ export const reqSearchProduct = (pageNum,pageSize,searchType,keyWord)=> myAxios.
 //根据商品ID获取商品信息
 //接口作废没有这个接口 绝望！！！
 export const reqProductId = (productId)=> myAxios.get(`${BASE_URL}/manage/category/info`,{params:{categoryId:productId}})
+
+//根据图片名删除图片
+export const reqDeletePic = ({name})=> myAxios.post(`${BASE_URL}/manage/img/delete`,{name})

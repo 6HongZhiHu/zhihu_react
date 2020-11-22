@@ -28,7 +28,7 @@ class Product extends Component {
     }
    
     const {status,data,msg} = result;
-    if(data.list) this.props.SaveProduct(data.list);
+    if (data) this.props.SaveProduct(data.list);
     
     //console.log(number)
     if(status===0){

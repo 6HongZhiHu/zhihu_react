@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import {Card,Button,Table,message,Modal,Input,Form} from "antd"
 import { LayoutOutlined } from '@ant-design/icons';
+import {connect} from "react-redux"
 import {reqCategory,reqAddCategory,reqUpdateCategory} from "../../api/index"
 import {PAGESIZE} from "../../config/index"
+import { createSaveCategoryAction } from "../../redux/action_creators/category_action"
 const {Item} = Form;
 
-export default class Category extends Component {
+class Category extends Component {
   formRef = React.createRef();
 
 
@@ -30,7 +32,10 @@ export default class Category extends Component {
     let res = await reqCategory();
     let { status, data, msg } = res;
 
-    if (status === 0) this.setState({ list: data, isLoading: false })
+    if (status === 0){
+      this.props.saveCategory(data)
+      this.setState({ list: data, isLoading: false })
+    } 
     else message.error(msg, 1);
   }
 
@@ -208,3 +213,8 @@ export default class Category extends Component {
     )
   }
 }
+
+export default connect(
+  state=>({}),
+  {saveCategory:createSaveCategoryAction}
+)(Category)
