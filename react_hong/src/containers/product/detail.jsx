@@ -21,18 +21,18 @@ class detail extends Component {
   getProductId = async (id)=>{
     //模拟异步请求 请求商品详细信息
     this.setState({
-      categoryId: sessionStorage.getItem("categoryId"),
-      desc: sessionStorage.getItem("desc"),
-      detail: sessionStorage.getItem("detail"),
+      categoryId: sessionStorage.getItem("categoryId") || "",
+      desc: sessionStorage.getItem("desc") || "",
+      detail: sessionStorage.getItem("detail") || "",
       imgs: JSON.parse(sessionStorage.getItem("imgs")) || [],
-      name: sessionStorage.getItem("name"),
-      price: sessionStorage.getItem("price"),
+      name: sessionStorage.getItem("name") || "",
+      price: sessionStorage.getItem("price") || "",
     });
     this.categoryId = sessionStorage.getItem("categoryId")
     this.setState({ isLoading: false })
   }
   getCategory = async ()=>{
-    let result = await reqCategory
+    let result = await reqCategory()
     const {status,data,msg} = result;
     if(status === 0){
       let result = data.find((item)=>{
@@ -72,7 +72,8 @@ class detail extends Component {
       let category = reduxCategory.find((item)=>{
        return item._id === this.categoryId
       });
-      this.setState({categoryName:category})
+      //console.log(category)
+      this.setState({categoryName:category.name})
     }else this.getCategory()
   }
   render() {
@@ -120,12 +121,11 @@ class detail extends Component {
               }
               <span></span>
             </Item>
-            <Item className="list">
+            <Item 
+              className="list"
+            >
               <span className="list-left">商品信息:</span>
-              <span dangerouslySetInnerHTML={{ __html: this.state.detail}}>
-                {}
-              </span>
-              <span></span>
+              <span dangerouslySetInnerHTML={{ __html: this.state.detail}}></span>
             </Item>
           </List>
         </Card>

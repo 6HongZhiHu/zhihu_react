@@ -60,6 +60,13 @@ export default class PictureWall extends Component {
     this.setState({ fileList })
   };
 
+  setImgArr = (imgsArr)=>{
+    let fileList = []
+    imgsArr.forEach((item,index)=>{
+      fileList.push({uid:-index,name:item,url:`${BASE_URL}/upload/${item}`})
+    })
+    this.setState({fileList})
+  }
   getImgList = ()=>{
     let res = [];
     this.state.fileList.forEach((item)=>{
@@ -77,7 +84,7 @@ render(){
   const uploadButton = (
     <div>
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <div style={{ marginTop: 8 }}>上传图片</div>
     </div>
   );
   //设置上传图片请求头加入token

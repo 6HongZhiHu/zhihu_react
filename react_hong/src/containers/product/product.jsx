@@ -30,7 +30,7 @@ class Product extends Component {
     const {status,data,msg} = result;
     if (data) this.props.SaveProduct(data.list);
     
-    //console.log(number)
+    //console.log(result)
     if(status===0){
       this.setState({
         prouctList:data.list,
