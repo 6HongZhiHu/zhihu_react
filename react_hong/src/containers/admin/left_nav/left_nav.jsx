@@ -22,24 +22,41 @@ class LeftNav extends Component {
       collapsed: !this.state.collapsed,
     });
   };
+  hasAuth = (item)=>{
+    //校验菜单权限
+    const { menus, username} = this.props
+    //console.log(username)
+    if(username === "admin"){
+      return true
+    }else if(!item.children){
+      return menus.find((item2)=>{
+        return item2 === item.key
+      })
+    }else if(item.children){
+      return item.children.some((item3)=>{return menus.indexOf(item3.key) !== -1})
+    }
+    
+  }
   createTag = (target)=>{
     return target.map((item)=>{
-      if(!item.children){
-        return( 
-          <Menu.Item key={item.key} icon={item.icon} 
-          onClick={()=>{this.props.saveTitle(item.title)}}>
-            <Link to={item.key}>
-              {item.title}
-            </Link>
-          </Menu.Item>
-        )
-      }else{
-        return(
+      if(this.hasAuth(item)){
+        if (!item.children) {
+          return (
+            <Menu.Item key={item.key} icon={item.icon}
+              onClick={() => { this.props.saveTitle(item.title) }}>
+              <Link to={item.key}>
+                {item.title}
+              </Link>
+            </Menu.Item>
+          )
+        } else {
+          return (
             <SubMenu key={item.key} icon={item.icon} title={item.title}>
               {this.createTag(item.children)}
             </SubMenu>
-        )
-      }
+          )
+        }
+      }else return false
     })
   }
   componentDidMount(){
@@ -70,7 +87,10 @@ class LeftNav extends Component {
   }
 }
  //用withRouter把普通组件的props属性中加入路由参数
-export default connect(state=>({}),
+export default connect(state=>({
+  menus:state.userInfo.user.role.menus,
+  username: state.userInfo.user.username
+}),
   {saveTitle: createSaveTitleAction}
 )
 (withRouter(LeftNav))

@@ -43,7 +43,7 @@ class detail extends Component {
     }
   }
   componentDidMount(){
-    console.log(this.props)
+    //console.log(this.props)
     const reduxList = this.props.productList || [];
     const reduxCategory = this.props.categoryList || [];
 
@@ -54,12 +54,12 @@ class detail extends Component {
       });
       if(result){
         const {categoryId,desc,detail,imgs,name,price} = result;
-        sessionStorage.setItem("categoryId", categoryId);
-        sessionStorage.setItem("desc", desc);
-        sessionStorage.setItem("detail", detail);
-        sessionStorage.setItem("imgs", JSON.stringify(imgs));
-        sessionStorage.setItem("name", name);
-        sessionStorage.setItem("price", price);
+        sessionStorage.setItem("categoryId", categoryId || "");
+        sessionStorage.setItem("desc", desc || "");
+        sessionStorage.setItem("detail", detail || "");
+        sessionStorage.setItem("imgs", JSON.stringify(imgs) || "");
+        sessionStorage.setItem("name", name || "");
+        sessionStorage.setItem("price", price || "");
         //console.log(JSON.stringify(imgs))
         //this.setState({ categoryId, desc, detail, imgs, name, price})
         this.setState({...result});
@@ -73,7 +73,7 @@ class detail extends Component {
        return item._id === this.categoryId
       });
       //console.log(category)
-      this.setState({categoryName:category.name})
+      if(category.name) this.setState({categoryName:category.name || ""})
     }else this.getCategory()
   }
   render() {

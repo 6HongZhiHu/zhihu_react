@@ -99,11 +99,12 @@ class addUpdate extends Component {
       sessionStorage.setItem("price", price);
       sessionStorage.setItem("_id", _id);
       if(result){
+        console.log(result)
         this.setState({ ...result })
         //回显图片 
         this.pictureWall.current.setImgArr(result.imgs)
         //回显富文本
-        this.RichTextEditor.current.setRichDetail(result.detail)
+        this.RichTextEditor.current.setRichDetail(result.detail || "")
       }
       
     }

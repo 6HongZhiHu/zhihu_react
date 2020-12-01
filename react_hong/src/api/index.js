@@ -54,3 +54,18 @@ export const reqAddporduct = (addObj)=> myAxios.post(`${BASE_URL}/manage/product
 
 //修改商品
 export const reqUpdateporduct = (addObj)=> myAxios.post(`${BASE_URL}/manage/product/update`,{...addObj})
+
+//获取角色列表
+export const reqGetRole = ()=> myAxios.get(`${BASE_URL}/manage/role/list`)
+
+//添加角色
+export const reqAddRole = (roleName)=> myAxios.post(`${BASE_URL}/manage/role/add`,roleName)
+
+//更新角色
+export const reqUpdateRole = (roleName)=> myAxios.post(`${BASE_URL}/manage/role/update`,{...roleName})
+
+//获取用户列表
+export const reqUserList = ()=> myAxios.get(`${BASE_URL}/manage/user/list`)
+
+//添加用户
+export const reqAdduUser = (user)=> myAxios.post(`${BASE_URL}/manage/user/add`,{...user})

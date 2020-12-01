@@ -21,7 +21,7 @@ const menuList = [
   },
   {
     title: '商品',
-    key: 'prod_about',
+    key: '/admin/prod_about',
     icon: <AppstoreOutlined />,
     children: [ // 子菜单列表
       {
@@ -50,7 +50,7 @@ const menuList = [
 
   {
     title: '图形图表',
-    key: 'charts',
+    key: '/admin/charts',
     icon:<AreaChartOutlined />,
     children: [
       {
