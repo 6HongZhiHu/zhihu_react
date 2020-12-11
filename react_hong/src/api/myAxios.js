@@ -55,7 +55,8 @@ instance.interceptors.response.use(
     nprogress.done()
     //删除用户操作 操作redux里的删除用户Action
     store.dispatch(createDeleteUserAction());
-    message.error(error.data.msg,3)
+    
+    if (error.data) message.error(error.data.msg,3)
     return new Promise(()=>{}) // 返回接口返回的错误信息 请求失败
   })
 

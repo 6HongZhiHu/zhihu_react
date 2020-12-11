@@ -212,10 +212,16 @@ class role extends Component {
           okText="确定"
           cancelText="取消"
         >
+          {/* <Tree
+            checkable
+            defaultExpandAll={true}
+            checkedKeys={checkedKeys}
+            onCheck={this.onCheck}
+          > */}
             <Tree
               defaultExpandAll
               checkable //允许选中
-              onExpand={this.onExpand} //收缩展开的回调
+              //onExpand={this.onExpand} //收缩展开的回调
               //expandedKeys={this.state.expandedKeys} //（受控）默认展开指定的树节点
               //autoExpandParent={this.state.autoExpandParent} //是否自动展开父节点
               onCheck={this.onCheck}

@@ -90,6 +90,7 @@ class addUpdate extends Component {
       
       //console.log(result)
       //this.formRef.current.setFieldsValue({ ...result })
+      if(result){
       const { categoryId, desc, detail, imgs, name, price ,_id} = result;
       sessionStorage.setItem("categoryId", categoryId);
       sessionStorage.setItem("desc", desc);
@@ -105,6 +106,7 @@ class addUpdate extends Component {
         this.pictureWall.current.setImgArr(result.imgs)
         //回显富文本
         this.RichTextEditor.current.setRichDetail(result.detail || "")
+      }
       }
       
     }
