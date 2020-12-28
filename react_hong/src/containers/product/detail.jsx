@@ -31,6 +31,7 @@ class detail extends Component {
     this.categoryId = sessionStorage.getItem("categoryId")
     this.setState({ isLoading: false })
   }
+  //获取商品分类
   getCategory = async ()=>{
     let result = await reqCategory()
     const {status,data,msg} = result;
@@ -73,7 +74,7 @@ class detail extends Component {
        return item._id === this.categoryId
       });
       //console.log(category)
-      if(category.name) this.setState({categoryName:category.name || ""})
+      if(category.name || category) this.setState({categoryName:category.name || ""})
     }else this.getCategory()
   }
   render() {
