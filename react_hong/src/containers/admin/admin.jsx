@@ -62,7 +62,7 @@ class Admin extends Component {
                 <Redirect to="/admin/home"/>
               </Switch>
             </Content>
-            <Footer className="footer"> 推荐使用谷歌浏览器，可以获得最佳体验</Footer>
+            <Footer className="footer"> 建议使用谷歌浏览器 </Footer>
           </Layout>
         </Layout>
       )
