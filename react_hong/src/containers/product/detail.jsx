@@ -74,7 +74,7 @@ class detail extends Component {
        return item._id === this.categoryId
       });
       //console.log(category)
-      if(category.name || category) this.setState({categoryName:category.name || ""})
+      if(category || category.name) this.setState({categoryName:category.name || ""})
     }else this.getCategory()
   }
   render() {
